@@ -7,13 +7,15 @@ rem Or visit the following URL for the latest information on this ScriptTiger sc
 rem https://github.com/ScriptTiger/CRLF-Normalizer
 rem =====
 
+setlocal ENABLEDELAYEDEXPANSION
+
 rem =====
 rem Establish root directory
 rem =====
 
 if "%~1"=="" (
 set /p ROOT=Normalize what root directory? || exit
-set ROOT=%ROOT:"=%
+set ROOT=!ROOT:"=!
 ) else set ROOT=%~1
 
 cd "%ROOT%" || goto exit
@@ -24,19 +26,21 @@ rem =====
 
 if "%~2"=="" (
 set /p TYPES=Normalize files to CRLF that end with what ^(i.e. ".txt .py"^)? || exit
-set TYPES=%TYPES:"=%
-set TYPES=%TYPES:.=[.]%
-) else (
-set TYPES=%~2)
+set TYPES=!TYPES:"=!
+set TYPES=!TYPES:.=[.]!
+) else set TYPES=%~2
 
 rem =====
 rem Establish if white space is removed or not
 rem =====
 
 if "%~3"=="" (
-choice /m "Would you like to skip blank lines ^(this makes things a lot faster^)?"
-set BLANK=%errorlevel%
-) else set BLANK=%~3
+choice /m "Would you like to skip blank lines (this makes things a lot faster)?"
+set BLANK=!errorlevel!
+) else (
+set BLANK=%~3
+set INTERACTIVE=0
+)
 
 rem =====
 rem Process root directory and all subdirectories
@@ -56,5 +60,5 @@ ren "%%~0.tmp" "%%~nx0"
 )
 echo Done^!
 :exit
-pause
+if not "%INTERACTIVE%"=="0" pause
 exit
