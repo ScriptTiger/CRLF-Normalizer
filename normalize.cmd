@@ -37,8 +37,17 @@ rem =====
 if "%~3"=="" (
 choice /m "Would you like to get rid of extra white space (indents and blank lines)?"
 set BLANK=!errorlevel!
+) else set BLANK=%~3
+
+rem =====
+rem Establish how to handle tabs
+rem =====
+
+if not "%BLANK%"=="1" if "%~4"=="" (
+choice /m "Is it okay if tabs are broken into spaces (it's faster if it doesn't matter)?"
+set TABS=!errorlevel!
 ) else (
-set BLANK=%~3
+set BLANK=%~4
 set INTERACTIVE=0
 )
 
@@ -52,7 +61,13 @@ echo Processing %%0...
 	if "%BLANK%"=="1" (
 		for /f "tokens=*" %%a in (%%~s0) do echo %%a
 	) else (
-		more "%%~0"
+		if "%TABS%"=="1" (
+			more "%%~0"	
+		) else (
+			for /f "tokens=1* delims=:" %%a in (
+				'findstr /n .* "%%~s0"'
+			) do @if "%%b"=="" (echo.) else (echo %%b)
+		)
 	)
 ) > "%%~0.tmp"
 del "%%~0"
