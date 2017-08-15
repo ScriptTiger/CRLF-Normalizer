@@ -65,7 +65,7 @@ echo Processing %%0...
 			more "%%~0"	
 		) else (
 			for /f "tokens=1* delims=:" %%a in (
-				'findstr /n .* "%%~s0"'
+				'findstr /n .* "%%~0"'
 			) do @if "%%b"=="" (echo.) else (echo %%b)
 		)
 	)
