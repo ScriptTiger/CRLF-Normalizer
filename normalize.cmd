@@ -50,9 +50,9 @@ for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
 echo Processing %%0...
 (
 	if "%BLANK%"=="1" (
-		for /f "tokens=*" %%a in (%%~s0) do @if "%%a"=="" (echo.) else (echo %%a)
+		for /f "tokens=*" %%a in (%%~s0) do echo %%a
 	) else (
-		more "%%~s0"
+		more "%%~0"
 	)
 ) > "%%~0.tmp"
 del "%%~0"
