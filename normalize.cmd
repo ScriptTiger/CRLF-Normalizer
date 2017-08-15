@@ -13,6 +13,7 @@ rem =====
 rem Establish root directory
 rem =====
 
+set ROOT=
 if "%~1"=="" (
 set /p ROOT=Normalize what root directory? || exit
 set ROOT=!ROOT:"=!
@@ -24,6 +25,7 @@ rem =====
 rem Establish files to normalize
 rem =====
 
+set TYPES=
 if "%~2"=="" (
 set /p TYPES=Normalize files to CRLF that end with what ^(i.e. ".txt .py"^)? || exit
 set TYPES=!TYPES:"=!
@@ -34,22 +36,25 @@ rem =====
 rem Establish if white space is removed or not
 rem =====
 
+set BLANK=
+set INTERACTIVE=
 if "%~3"=="" (
 choice /m "Would you like to get rid of extra white space (indents and blank lines)?"
 set BLANK=!errorlevel!
-) else set BLANK=%~3
+) else (
+set BLANK=%~3
+set INTERACTIVE=0
+)
 
 rem =====
 rem Establish how to handle tabs
 rem =====
 
+set TABS=
 if not "%BLANK%"=="1" if "%~4"=="" (
 choice /m "Is it okay if tabs are broken into spaces (it's faster if it doesn't matter)?"
 set TABS=!errorlevel!
-) else (
-set BLANK=%~4
-set INTERACTIVE=0
-)
+) else set TABS=%~4
 
 rem =====
 rem Process root directory and all subdirectories
@@ -66,7 +71,7 @@ echo Processing %%0...
 		) else (
 			for /f "tokens=1* delims=:" %%a in (
 				'findstr /n .* "%%~0"'
-			) do @if "%%b"=="" (echo.) else (echo %%b)
+			) do if "%%b"=="" (echo.) else (echo %%b)
 		)
 	)
 ) > "%%~0.tmp"
