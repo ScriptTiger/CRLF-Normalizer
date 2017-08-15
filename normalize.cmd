@@ -35,7 +35,7 @@ rem Establish if white space is removed or not
 rem =====
 
 if "%~3"=="" (
-choice /m "Would you like to skip blank lines (this makes things a lot faster)?"
+choice /m "Would you like to get rid of extra white space (indents and blank lines)?"
 set BLANK=!errorlevel!
 ) else (
 set BLANK=%~3
@@ -52,13 +52,13 @@ echo Processing %%0...
 	if "%BLANK%"=="1" (
 		for /f "tokens=*" %%a in (%%~s0) do @if "%%a"=="" (echo.) else (echo %%a)
 	) else (
-		for /f "tokens=1* delims=:" %%a in ('findstr /n .* "%%~s0"') do @if "%%b"=="" (echo.) else (echo %%b)
+		more "%%~s0"
 	)
 ) > "%%~0.tmp"
 del "%%~0"
 ren "%%~0.tmp" "%%~nx0"
 )
-echo Done^!
+echo Done^^!
 :exit
 if not "%INTERACTIVE%"=="0" pause
 exit
