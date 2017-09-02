@@ -6,3 +6,6 @@ If you normalize the same repo directory often, you can easily make a shortcut t
 
 You can download this repo from the below link to get started:  
 https://github.com/ScriptTiger/CRLF-Normalizer/archive/master.zip
+
+If you would like to show your support for ScriptTiger, check out the Patreon page to find out how:  
+https://www.patreon.com/ScriptTiger
