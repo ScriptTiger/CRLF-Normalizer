@@ -61,8 +61,8 @@ rem Process root directory and all subdirectories
 rem =====
 
 for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
+	setlocal DISABLEDELAYEDEXPANSION
 	echo Processing %%0...
-	endlocal DISABLEDELAYEDEXPANSION
 	(
 		if "%BLANK%"=="1" (
 			for /f "tokens=*" %%a in (%%~s0) do echo %%a
@@ -78,7 +78,7 @@ for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
 	) > "%%~0.tmp"
 	del "%%~0"
 	ren "%%~0.tmp" "%%~nx0"
-	setlocal ENABLEDELAYEDEXPANSION
+	endlocal
 )
 echo Done^^!
 :exit
