@@ -15,8 +15,8 @@ rem =====
 
 set ROOT=
 if "%~1"=="" (
-set /p ROOT=Normalize what root directory? || exit
-set ROOT=!ROOT:"=!
+	set /p ROOT=Normalize what root directory? || exit
+	set ROOT=!ROOT:"=!
 ) else set ROOT=%~1
 
 cd "%ROOT%" || goto exit
@@ -27,9 +27,9 @@ rem =====
 
 set TYPES=
 if "%~2"=="" (
-set /p TYPES=Normalize files to CRLF that end with what ^(i.e. ".txt .py"^)? || exit
-set TYPES=!TYPES:"=!
-set TYPES=!TYPES:.=[.]!
+	set /p TYPES=Normalize files to CRLF that end with what ^(i.e. ".txt .py"^)? || exit
+	set TYPES=!TYPES:"=!
+	set TYPES=!TYPES:.=[.]!
 ) else set TYPES=%~2
 
 rem =====
@@ -39,11 +39,11 @@ rem =====
 set BLANK=
 set INTERACTIVE=
 if "%~3"=="" (
-choice /m "Would you like to get rid of extra white space (indents and blank lines)?"
-set BLANK=!errorlevel!
+	choice /m "Would you like to get rid of extra white space (indents and blank lines)?"
+	set BLANK=!errorlevel!
 ) else (
-set BLANK=%~3
-set INTERACTIVE=0
+	set BLANK=%~3
+	set INTERACTIVE=0
 )
 
 rem =====
@@ -52,8 +52,8 @@ rem =====
 
 set TABS=
 if not "%BLANK%"=="1" if "%~4"=="" (
-choice /m "Is it okay if tabs are broken into spaces (it's faster if it doesn't matter)?"
-set TABS=!errorlevel!
+	choice /m "Is it okay if tabs are broken into spaces (it's faster if it doesn't matter)?"
+	set TABS=!errorlevel!
 ) else set TABS=%~4
 
 rem =====
@@ -61,26 +61,24 @@ rem Process root directory and all subdirectories
 rem =====
 
 for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
-echo Processing %%0...
-(
-	if "%BLANK%"=="1" (
-		endlocal DISABLEDELAYEDEXPANSION
-		for /f "tokens=*" %%a in (%%~s0) do echo %%a
-		setlocal ENABLEDELAYEDEXPANSION
-	) else (
-		if "%TABS%"=="1" (
-			more "%%~0"
+	echo Processing %%0...
+	endlocal DISABLEDELAYEDEXPANSION
+	(
+		if "%BLANK%"=="1" (
+			for /f "tokens=*" %%a in (%%~s0) do echo %%a
 		) else (
-			endlocal DISABLEDELAYEDEXPANSION
-			for /f "tokens=1* delims=:" %%a in (
-				'findstr /n .* "%%~0"'
-			) do if "%%b"=="" (echo.) else (echo %%b)
-			setlocal ENABLEDELAYEDEXPANSION
+			if "%TABS%"=="1" (
+				more "%%~0"
+			) else (
+				for /f "tokens=1* delims=:" %%a in (
+					'findstr /n .* "%%~0"'
+				) do if "%%b"=="" (echo.) else (echo %%b)
+			)
 		)
-	)
-) > "%%~0.tmp"
-del "%%~0"
-ren "%%~0.tmp" "%%~nx0"
+	) > "%%~0.tmp"
+	del "%%~0"
+	ren "%%~0.tmp" "%%~nx0"
+	setlocal ENABLEDELAYEDEXPANSION
 )
 echo Done^^!
 :exit
