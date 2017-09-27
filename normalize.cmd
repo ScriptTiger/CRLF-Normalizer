@@ -64,14 +64,14 @@ for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
 echo Processing %%0...
 (
 	if "%BLANK%"=="1" (
-		endlocal ENABLEDELAYEDEXPANSION
+		endlocal DISABLEDELAYEDEXPANSION
 		for /f "tokens=*" %%a in (%%~s0) do echo %%a
 		setlocal ENABLEDELAYEDEXPANSION
 	) else (
 		if "%TABS%"=="1" (
 			more "%%~0"
 		) else (
-			endlocal ENABLEDELAYEDEXPANSION
+			endlocal DISABLEDELAYEDEXPANSION
 			for /f "tokens=1* delims=:" %%a in (
 				'findstr /n .* "%%~0"'
 			) do if "%%b"=="" (echo.) else (echo %%b)
