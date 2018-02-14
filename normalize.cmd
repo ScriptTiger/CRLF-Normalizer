@@ -10,6 +10,13 @@ rem =====
 setlocal ENABLEDELAYEDEXPANSION
 
 rem =====
+rem Enable internal functions to be called externally within for conditions
+rem =====
+
+if not "%1"=="" goto %1
+set SELF=%~s0
+
+rem =====
 rem Establish root directory
 rem =====
 
@@ -52,7 +59,10 @@ rem =====
 
 set TABS=
 if not "%BLANK%"=="1" if "%~4"=="" (
-	choice /m "Is it okay if tabs are broken into spaces (it's faster if it doesn't matter)?"
+	echo There is a significant speed boost option available if:
+	echo All files are less than 65534 lines
+	echo You don't mind tabs being broken into spaces
+	choice /m "Would you like to take the boost?"
 	set TABS=!errorlevel!
 ) else set TABS=%~4
 
@@ -61,7 +71,7 @@ rem Process root directory and all subdirectories
 rem =====
 
 for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
-	setlocal DISABLEDELAYEDEXPANSION
+	setlocal
 	echo Processing %%0...
 	(
 		if "%BLANK%"=="1" (
@@ -71,8 +81,14 @@ for /f  %%0 in ('dir /b /s ^| findstr /e "%TYPES%"') do (
 				more "%%~0"
 			) else (
 				for /f "tokens=1* delims=:" %%a in (
-					'findstr /n .* "%%~0"'
-				) do if "%%b"=="" (echo.) else (echo %%b)
+					'%SELF% Format_Feed "%%~0"'
+				) do (
+					if "%%b"=="" (echo.) else (
+						set LINE=%%b
+						set LINE=!LINE:/COLON/:=:!
+						echo !LINE!
+					)
+				)
 			)
 		)
 	) > "%%~0.tmp"
@@ -84,3 +100,17 @@ echo Done^^!
 :exit
 if not "%INTERACTIVE%"=="0" pause
 exit
+
+rem =====
+rem Format lines and feed back
+rem An extra step is needed to keep the integrity of lines starting with the delimeter (":")
+rem =====
+
+:Format_Feed
+for /f "tokens=*" %%0 in (
+'findstr /n .* %2'
+) do (
+set LINE=%%0
+set LINE=!LINE::=/COLON/:!
+echo !LINE!)
+exit /b
