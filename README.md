@@ -1,5 +1,8 @@
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/ScriptTiger)
 
+**ScriptTiger is currently sponsoring a verified charitable cause for a family in need living in Indonesia. Please visit the following link to read more, and please share it, like it, and, if you feel so led, contribute to the cause.
+http://gf.me/u/hv2dbu**
+
 # CRLF Normalizer
 An LF to CRLF converter to convert any files in any directory to CRLF.
 
